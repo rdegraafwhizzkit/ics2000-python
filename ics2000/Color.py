@@ -1,6 +1,7 @@
 from ics2000.Bytes import MAX_UINT_16, byte_to_int4, insertint16
 import logging
 
+_LOGGER = logging.getLogger(__name__)
 
 def rgb_constrained(inp) -> int:
     if inp < 0:
@@ -54,7 +55,7 @@ class RGB:
         y = 1 / (xyx.x + y2 + xyx.z)
         f1 = int(x * MAX_UINT_16)
         f2 = int(y * MAX_UINT_16)
-        logging.debug(f'Saving: {str(f1)} : {str(f2)}')
+        _LOGGER.debug(f'Saving: {str(f1)} : {str(f2)}')
         arr = bytearray(4)
         insertint16(arr, f1 * 100, 0)
         insertint16(arr, f2 * 100, 2)

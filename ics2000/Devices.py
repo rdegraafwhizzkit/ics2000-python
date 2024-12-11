@@ -1,6 +1,7 @@
 from typing import Optional
 import logging
 
+_LOGGER = logging.getLogger(__name__)
 
 class Device:
 
@@ -8,7 +9,7 @@ class Device:
         self._hub = hb
         self._name = name
         self._id = entity_id
-        logging.info(f'{str(self._name)} : {str(self._id)}')
+        _LOGGER.info(f'{str(self._name)} : {str(self._id)}')
 
     @property
     def id(self) -> int:

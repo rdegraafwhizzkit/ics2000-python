@@ -10,6 +10,7 @@ from ics2000.Cryptographer import decrypt
 from ics2000.Command import Command
 from ics2000.Devices import Device, Dimmer, Optional
 
+_LOGGER = logging.getLogger(__name__)
 
 def constraint_int(inp, min_val, max_val) -> int:
     if inp < min_val:
@@ -42,7 +43,7 @@ class Hub:
         self.ip_address = get_hub_ip()
 
     def login_user(self):
-        logging.debug("Logging in user")
+        _LOGGER.debug("Logging in user")
         url = f'{Hub.base_url}/account.php'
         params = {"action": "login", "email": self._email, "mac": self.mac.replace(":", ""),
                   "password_hash": self._password, "device_unique_id": "android", "platform": "Android"}
@@ -52,7 +53,7 @@ class Hub:
             self.aes = resp["homes"][0]["aes_key"]
             self._homeId = resp["homes"][0]["home_id"]
             if self.aes is not None:
-                logging.debug("Successfully got AES key")
+                _LOGGER.debug("Successfully got AES key")
                 self._connected = True
             else:
                 raise CoreException(f'Could not get AES key for user {self._email}')
@@ -97,7 +98,7 @@ class Hub:
 
     def send_command_tcp(self, command):
         url = f'{Hub.base_url}/command.php'
-        logging.info(f'Using TCP to send command to {url}')
+        _LOGGER.info(f'Using TCP to send command to {url}')
         params = {"action": "add", "email": self._email, "mac": self.mac.replace(":", ""),
                   "password_hash": self._password, "device_unique_id": "android", "command": command}
         response = requests.get(url, params=params)
@@ -105,7 +106,7 @@ class Hub:
             raise CoreException(f'Could not send command {command}: {response.text}')
 
     def send_command_udp(self, command):
-        logging.info(f'Using UDP to send command to {self.ip_address}')
+        _LOGGER.info(f'Using UDP to send command to {self.ip_address}')
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.sendto(command, (self.ip_address, 2012))
         sock.close()
