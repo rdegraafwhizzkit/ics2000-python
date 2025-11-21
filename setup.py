@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ics2000-python",
-    version="1.0.3",
+    version="1.0.4",
     author="Rutger de Graaf",
     author_email="",
     description="Trust ICS-2000 Python library",
